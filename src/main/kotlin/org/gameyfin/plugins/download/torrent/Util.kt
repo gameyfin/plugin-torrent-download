@@ -1,4 +1,4 @@
-package de.grimsi.gameyfinplugins.torrentdownload
+package org.gameyfin.plugins.download.torrent
 
 import kotlin.time.Duration
 
