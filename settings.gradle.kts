@@ -6,4 +6,4 @@ pluginManagement {
         id("com.google.devtools.ksp") version providers.gradleProperty("kspVersion").get()
     }
 }
-rootProject.name = "plugin-torrentdownload"
+rootProject.name = "plugin-torrent-download"

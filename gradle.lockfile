@@ -1,7 +1,7 @@
 # This is a Gradle generated file for dependency locking.
 # Manual edits can break the build and are not advised.
 # This file is expected to be part of source control.
-# To regenerate this file, run: ./gradlew :plugins:torrentdownload:dependencies --write-locks
+# To regenerate this file, run: ./gradlew :dependencies --write-locks
 care.better.pf4j:pf4j-kotlin-symbol-processing:2.4.0-1.0.5=kspKotlinProcessorClasspath
 com.fasterxml.jackson.core:jackson-annotations:2.22=testRuntimeClasspath
 com.frostwire:jlibtorrent-linux-arm64:2.0.12.9=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
@@ -15,6 +15,7 @@ com.google.devtools.ksp:symbol-processing-api:2.3.11=kotlinCompilerPluginClasspa
 com.google.devtools.ksp:symbol-processing-api:2.3.6=kspKotlinProcessorClasspath
 io.github.oshai:kotlin-logging-jvm:8.0.4=testRuntimeClasspath
 org.apiguardian:apiguardian-api:1.1.2=testCompileClasspath
+org.gameyfin:plugin-api:2.6.2=compileClasspath,testCompileClasspath,testRuntimeClasspath
 org.jetbrains.kotlin:kotlin-build-tools-api:2.4.0=kotlinAbiValidationCompatClasspath
 org.jetbrains.kotlin:kotlin-build-tools-api:2.4.10=kotlinBuildToolsApiClasspath,kotlinCompilerClasspath,kotlinKlibCommonizerClasspath
 org.jetbrains.kotlin:kotlin-build-tools-compat:2.4.10=kotlinAbiValidationCompatClasspath,kotlinBuildToolsApiClasspath,kotlinCompilerClasspath
