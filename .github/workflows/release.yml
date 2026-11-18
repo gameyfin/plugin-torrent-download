@@ -1,0 +1,14 @@
+name: Release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+jobs:
+  release:
+    permissions:
+      contents: write
+    uses: gameyfin/actions/.github/workflows/plugin-release.yml@7cc1c064d1fb0b550577e3ea23d410fc1607cdd7
+    with:
+      actions_ref: 7cc1c064d1fb0b550577e3ea23d410fc1607cdd7
+    secrets: inherit

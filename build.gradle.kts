@@ -1,5 +1,72 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import java.util.jar.Manifest
+
 plugins {
+    kotlin("jvm")
     id("com.google.devtools.ksp")
+}
+
+group = "org.gameyfin.plugins"
+version = Manifest(file("src/main/resources/MANIFEST.MF").inputStream()).mainAttributes.getValue("Plugin-Version")
+
+repositories { mavenCentral() }
+dependencyLocking { lockAllConfigurations() }
+java {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+kotlin.compilerOptions {
+    languageVersion = KotlinVersion.KOTLIN_2_4
+    apiVersion = KotlinVersion.KOTLIN_2_4
+    jvmTarget = JvmTarget.JVM_25
+    progressiveMode = true
+    freeCompilerArgs.add("-Xjsr305=strict")
+}
+
+dependencies {
+    compileOnly(kotlin("stdlib"))
+    compileOnly("org.gameyfin:plugin-api:2.7.0")
+    testImplementation("org.gameyfin:plugin-api:2.7.0")
+    testImplementation(kotlin("test"))
+    testImplementation(platform("org.junit:junit-bom:${property("junitVersion")}"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+configurations.named("runtimeClasspath") { exclude(group = "org.slf4j") }
+
+tasks.jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    isZip64 = true
+    dependsOn("kspKotlin")
+    manifest { from("src/main/resources/MANIFEST.MF") }
+    from(configurations.runtimeClasspath.get().map { zipTree(it) }) {
+        exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA", "META-INF/*.EC")
+    }
+    from(layout.buildDirectory.dir("generated/ksp/main/resources"))
+    from("src/main/resources") {
+        include("logo.*")
+        into("META-INF/resources")
+    }
+}
+
+tasks.register<Copy>("copyDependencyClasses") {
+    dependsOn(tasks.jar)
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(configurations.runtimeClasspath.get().map { zipTree(it) }) { include("**/*.class") }
+    into(layout.buildDirectory.dir("classes/kotlin/main"))
+}
+tasks.register<Copy>("prepareDevPlugin") {
+    group = "build"
+    description = "Prepares dependency classes and extension indexes for PF4J development loading"
+    dependsOn("copyDependencyClasses")
+    from(layout.buildDirectory.dir("generated/ksp/main/resources"))
+    into(layout.buildDirectory.dir("resources/main"))
+}
+tasks.build { dependsOn("prepareDevPlugin") }
+tasks.test {
+    useJUnitPlatform()
+    dependsOn("prepareDevPlugin")
 }
 
 repositories {
@@ -44,3 +111,4 @@ tasks.named("classes") {
 tasks.named("test") {
     dependsOn("extractNativeLibraries")
 }
+
