@@ -1,13 +1,21 @@
 {
   "id": "org.gameyfin.plugins.download.torrent",
   "name": "Torrent Download",
+  "shortDescription": "Shares games through a built-in BitTorrent tracker. Requires a torrent client to download.",
   "description": "Distributes games via a built-in torrent tracker.<br>Users need to install a torrent client to be able to download the games.",
   "provider": "grimsi, Pfuenzle",
   "license": "MIT",
   "projectUrl": "https://github.com/gameyfin/plugin-torrent-download",
+  "logo": "https://raw.githubusercontent.com/gameyfin/plugin-torrent-download/main/src/main/resources/logo.svg",
   "types": [
     "DownloadProvider",
     "GameyfinTask"
+  ],
+  "tags": [
+    "official",
+    "download",
+    "bittorrent",
+    "peer-to-peer"
   ],
   "maintainers": [
     "grimsi"
