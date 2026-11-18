@@ -1,14 +1,22 @@
 name: Release
 on:
-  push:
-    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: Version bump
+        type: choice
+        required: true
+        default: patch
+        options:
+          - major
+          - minor
+          - patch
 permissions:
   contents: read
 jobs:
   release:
-    permissions:
-      contents: write
-    uses: gameyfin/actions/.github/workflows/plugin-release.yml@7cc1c064d1fb0b550577e3ea23d410fc1607cdd7
+    uses: gameyfin/actions/.github/workflows/plugin-release.yml@c7d171d313b5421c796b9721af0d9202f488cef3
     with:
-      actions_ref: 7cc1c064d1fb0b550577e3ea23d410fc1607cdd7
+      actions_ref: c7d171d313b5421c796b9721af0d9202f488cef3
+      version_bump: ${{ inputs.version_bump }}
     secrets: inherit
