@@ -12,22 +12,27 @@ version = Manifest(file("src/main/resources/MANIFEST.MF").inputStream()).mainAtt
 
 repositories { mavenCentral() }
 dependencyLocking { lockAllConfigurations() }
+val javaVersion = providers.gradleProperty("javaVersion").get()
+val kotlinLanguageVersion = KotlinVersion.fromVersion(providers.gradleProperty("kotlinLanguageVersion").get())
+
 java {
-    sourceCompatibility = JavaVersion.VERSION_25
-    targetCompatibility = JavaVersion.VERSION_25
+    sourceCompatibility = JavaVersion.toVersion(javaVersion)
+    targetCompatibility = JavaVersion.toVersion(javaVersion)
 }
 kotlin.compilerOptions {
-    languageVersion = KotlinVersion.KOTLIN_2_4
-    apiVersion = KotlinVersion.KOTLIN_2_4
-    jvmTarget = JvmTarget.JVM_25
+    languageVersion = kotlinLanguageVersion
+    apiVersion = kotlinLanguageVersion
+    jvmTarget = JvmTarget.fromTarget(javaVersion)
     progressiveMode = true
     freeCompilerArgs.add("-Xjsr305=strict")
 }
 
+val pluginApiVersion = providers.gradleProperty("pluginApiVersion").get()
+
 dependencies {
     compileOnly(kotlin("stdlib"))
-    compileOnly("org.gameyfin:plugin-api:2.7.0")
-    testImplementation("org.gameyfin:plugin-api:2.7.0")
+    compileOnly("org.gameyfin:plugin-api:$pluginApiVersion")
+    testImplementation("org.gameyfin:plugin-api:$pluginApiVersion")
     testImplementation(kotlin("test"))
     testImplementation(platform("org.junit:junit-bom:${property("junitVersion")}"))
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -51,6 +56,8 @@ tasks.jar {
 }
 
 tasks.register<Copy>("copyDependencyClasses") {
+    group = "build"
+    description = "Copies runtime dependency classes for PF4J development loading"
     dependsOn(tasks.jar)
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from(configurations.runtimeClasspath.get().map { zipTree(it) }) { include("**/*.class") }
