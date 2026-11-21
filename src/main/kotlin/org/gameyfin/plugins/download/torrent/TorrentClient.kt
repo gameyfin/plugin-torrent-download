@@ -25,7 +25,7 @@ class TorrentClient(
     private val dhtEnabled: Boolean,
     private val lsdEnabled: Boolean,
     private val stopSeedingWhenComplete: Boolean,
-    private val diskIoMode: TorrentDiskIoMode = TorrentDiskIoMode.Pread
+    private val diskIoMode: TorrentDiskIoMode = TorrentDiskIoMode.pread
 ) {
     private val log = LoggerFactory.getLogger(TorrentClient::class.java)
 
@@ -140,7 +140,7 @@ class TorrentClient(
         settingsPack.listenInterfaces("0.0.0.0:$listenPort,[::]:$listenPort")
 
         // Configure announce IP if externalHost is set
-        if (externalHost != null && externalHost.isNotBlank()) {
+        if (!externalHost.isNullOrBlank()) {
             try {
                 val resolvedIp = InetAddress.getByName(externalHost).hostAddress
                 settingsPack.setString(string_types.announce_ip.swigValue(), resolvedIp)
@@ -165,20 +165,17 @@ class TorrentClient(
 
         val sessionParams = SessionParams(settingsPack)
 
-        val os = System.getProperty("os.name")
-        val backend = diskIoMode.forOperatingSystem(os)
-        when (backend) {
-            TorrentDiskIoMode.Pread -> sessionParams.setPreadDiskIO()
+        when (diskIoMode) {
+            TorrentDiskIoMode.pread -> sessionParams.setPreadDiskIO()
             TorrentDiskIoMode.POSIX -> sessionParams.setPosixDiskIO()
             TorrentDiskIoMode.`Memory-mapped` -> {
                 sessionParams.setMMapDiskIO()
                 if (!isSignalChainingActive()) {
-                    log.warn("Memory-mapped disk I/O can crash the JVM on I/O errors. Use Pread to avoid this risk.")
+                    log.warn("Memory-mapped disk I/O can crash the JVM on I/O errors. Use pread to avoid this risk.")
                 }
             }
-            null -> sessionParams.setDefaultDiskIO()
         }
-        log.info("Configured disk I/O for {}: {}", os, backend?.name ?: "libtorrent default")
+        log.info("Configured disk I/O: {}", diskIoMode)
 
         sessionManager.start(sessionParams)
 

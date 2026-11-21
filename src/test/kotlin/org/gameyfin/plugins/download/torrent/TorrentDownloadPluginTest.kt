@@ -23,17 +23,6 @@ class TorrentDownloadPluginTest {
     lateinit var directory: Path
 
     @Test
-    fun `disk backend respects the platform and configured mode`() {
-        for (mode in TorrentDiskIoMode.entries) {
-            for (os in listOf("Linux", "Mac OS X", "Darwin")) {
-                assertEquals(mode, mode.forOperatingSystem(os))
-            }
-            assertEquals(TorrentDiskIoMode.Pread, mode.forOperatingSystem("Windows 11"))
-            assertNull(mode.forOperatingSystem("unknown"))
-        }
-    }
-
-    @Test
     fun `pread session preserves the tracker when seeding a torrent file`() {
         val game = directory.resolve("game.bin").apply { writeBytes(ByteArray(32_768)) }
         val tracker = "http://127.0.0.1:1/announce"

@@ -106,10 +106,10 @@ class TorrentDownloadPlugin(context: PluginContext) : ConfigurableGameyfinPlugin
         ),
         ConfigMetadata(
             key = "diskIoMode",
-            label = "Disk I/O Mode (Linux/macOS)",
-            description = "Pread (default) uses multithreaded positional I/O. POSIX is single-threaded. Memory-mapped I/O can crash the JVM on storage errors.",
+            label = "Disk I/O Mode",
+            description = "Pread (default) uses multithreaded positional I/O.\nPOSIX is single-threaded.\nMemory-mapped I/O can crash Gameyfin on storage errors.",
             type = TorrentDiskIoMode::class.java,
-            default = TorrentDiskIoMode.Pread
+            default = TorrentDiskIoMode.pread
         ),
         ConfigMetadata(
             key = "externalHost",
@@ -194,7 +194,7 @@ class TorrentDownloadPlugin(context: PluginContext) : ConfigurableGameyfinPlugin
             dhtEnabled = config("dhtEnabled"),
             lsdEnabled = config("lsdEnabled"),
             stopSeedingWhenComplete = config("stopSeedingWhenComplete"),
-            diskIoMode = optionalConfig<TorrentDiskIoMode>("diskIoMode") ?: TorrentDiskIoMode.Pread
+            diskIoMode = optionalConfig<TorrentDiskIoMode>("diskIoMode") ?: TorrentDiskIoMode.pread
         )
 
         client.start()
