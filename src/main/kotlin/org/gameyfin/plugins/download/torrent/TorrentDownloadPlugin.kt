@@ -58,6 +58,15 @@ class TorrentDownloadPlugin(context: PluginContext) : ConfigurableGameyfinPlugin
     }
 
     init {
+        // The official Linux image has a passwd entry for gameyfin but no home directory.
+        if (System.getenv("RUNTIME_ENV") == "docker" &&
+            System.getenv("XDG_CACHE_HOME").isNullOrEmpty() &&
+            Files.notExists(Path.of(System.getProperty("user.home")))
+        ) {
+            System.getProperties().putIfAbsent(
+                "jlibtorrent.cache.dir", dataDirectory.resolve("cache").toAbsolutePath().toString()
+            )
+        }
         plugin = this
     }
 
