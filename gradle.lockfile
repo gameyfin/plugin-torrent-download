@@ -4,12 +4,12 @@
 # To regenerate this file, run: ./gradlew :dependencies --write-locks
 care.better.pf4j:pf4j-kotlin-symbol-processing:2.4.0-1.0.5=kspKotlinProcessorClasspath
 com.fasterxml.jackson.core:jackson-annotations:2.22=testRuntimeClasspath
-com.frostwire:jlibtorrent-linux-arm64:2.0.12.9=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
-com.frostwire:jlibtorrent-linux-x86_64:2.0.12.9=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
-com.frostwire:jlibtorrent-macosx-arm64:2.0.12.9=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
-com.frostwire:jlibtorrent-macosx-x86_64:2.0.12.9=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
-com.frostwire:jlibtorrent-windows:2.0.12.9=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
-com.frostwire:jlibtorrent:2.0.12.9=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+com.frostwire:jlibtorrent-linux-arm64:2.1.2.1=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+com.frostwire:jlibtorrent-linux-x86_64:2.1.2.1=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+com.frostwire:jlibtorrent-macosx-arm64:2.1.2.1=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+com.frostwire:jlibtorrent-macosx-x86_64:2.1.2.1=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+com.frostwire:jlibtorrent-windows:2.1.2.1=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
+com.frostwire:jlibtorrent:2.1.2.1=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
 com.github.zafarkhaja:java-semver:0.10.2=compileClasspath,kspKotlinProcessorClasspath,testCompileClasspath,testRuntimeClasspath
 com.google.devtools.ksp:symbol-processing-api:2.3.11=kotlinCompilerPluginClasspathMain,kotlinCompilerPluginClasspathTest,kspPluginClasspath,kspPluginClasspathNonEmbeddable
 com.google.devtools.ksp:symbol-processing-api:2.3.6=kspKotlinProcessorClasspath
