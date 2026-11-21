@@ -2,12 +2,13 @@ package org.gameyfin.plugins.download.torrent
 
 @Suppress("EnumEntryName")
 enum class TorrentDiskIoMode {
-    /** Portable file I/O: reopens the file for every block. Slow on network storage. */
     POSIX,
+    `Memory-mapped`,
+    Pread;
 
-    /**
-     * libtorrent's default memory-mapped I/O. Much faster, but libtorrent then installs its own
-     * SIGSEGV/SIGBUS handler, so the JVM must run with signal chaining (LD_PRELOAD libjsig.so).
-     */
-    `Memory-mapped`
+    internal fun forOperatingSystem(os: String): TorrentDiskIoMode? = when {
+        os.startsWith("Windows", ignoreCase = true) -> Pread
+        listOf("nix", "nux", "mac", "darwin").any { os.contains(it, ignoreCase = true) } -> this
+        else -> null
+    }
 }
