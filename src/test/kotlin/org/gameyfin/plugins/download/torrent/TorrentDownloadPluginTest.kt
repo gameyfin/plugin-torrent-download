@@ -1,5 +1,10 @@
 package org.gameyfin.plugins.download.torrent
 
+import com.frostwire.jlibtorrent.SessionManager
+import com.frostwire.jlibtorrent.SessionParams
+import com.frostwire.jlibtorrent.SettingsPack
+import com.frostwire.jlibtorrent.TorrentBuilder
+import com.frostwire.jlibtorrent.TorrentFlags
 import com.frostwire.jlibtorrent.TorrentInfo
 import org.gameyfin.pluginapi.core.wrapper.PluginContext
 import org.gameyfin.pluginapi.data.GameyfinDataService
@@ -16,6 +21,44 @@ import kotlin.test.*
 class TorrentDownloadPluginTest {
     @TempDir
     lateinit var directory: Path
+
+    @Test
+    fun `disk backend respects the platform and configured mode`() {
+        for (mode in TorrentDiskIoMode.entries) {
+            for (os in listOf("Linux", "Mac OS X", "Darwin")) {
+                assertEquals(mode, mode.forOperatingSystem(os))
+            }
+            assertEquals(TorrentDiskIoMode.Pread, mode.forOperatingSystem("Windows 11"))
+            assertNull(mode.forOperatingSystem("unknown"))
+        }
+    }
+
+    @Test
+    fun `pread session preserves the tracker when seeding a torrent file`() {
+        val game = directory.resolve("game.bin").apply { writeBytes(ByteArray(32_768)) }
+        val tracker = "http://127.0.0.1:1/announce"
+        val torrent = directory.resolve("game.torrent")
+        torrent.writeBytes(TorrentBuilder().path(game.toFile()).addTracker(tracker).generate().entry().bencode())
+        val info = TorrentInfo(torrent.toFile())
+        val settings = SettingsPack().apply {
+            listenInterfaces("127.0.0.1:0")
+            isEnableDht = false
+            isEnableLsd = false
+        }
+        val session = SessionManager()
+        session.start(SessionParams(settings).apply { setPreadDiskIO() })
+        try {
+            session.download(info, directory.toFile(), null, null, null, TorrentFlags.SEED_MODE)
+            val start = System.nanoTime()
+            while (session.find(info)?.isValid != true) {
+                assertTrue(System.nanoTime() - start < 10_000_000_000L, "Torrent was not added within 10 seconds")
+                Thread.sleep(20)
+            }
+            assertEquals(listOf(tracker), session.find(info).trackers().map { it.url() })
+        } finally {
+            session.stop()
+        }
+    }
 
     @Test
     fun `file and magnet providers share cached torrents for every protocol version`() {
